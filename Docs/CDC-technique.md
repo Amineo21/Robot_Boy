@@ -6,7 +6,7 @@
 
 # 1. Vision
 
- Un robot autonome basé sur ROS2 capable d’assister les infirmiers en EHPAD en livrant de manière sécurisée les médicaments et les plateaux-repas aux patients, afin d’optimiser le temps du personnel et améliorer la qualité des soins.
+ Un robot autonome basé sur ROS2 capable d’assister les employers (infirmiers et aides-soignants) en EHPAD en livrant le matériel(gants,serviettes, etc, ...) et les plateaux-repas aux patients, afin d’optimiser le temps du personnel et améliorer la qualité des soins.
 
 ---
 
@@ -14,10 +14,10 @@
 
 ## Objectifs
 
-1. Permettre la livraison autonome de médicaments et de repas
+1. Permettre la livraison autonome des repas et du matériel
 2. Permettre à l’infirmier de commander le robot via une interface web (tablette ou telephone mobile)
-3. Permettre une communication temps réel le suivi du robot
-4. Suivi de la position du robot en temps réel et de sa navigation
+3. Permettre une communication temps réel pour le suivi du robot (Batterie faible, collisions avec patients ou personnel)
+4. Suivi de la position du robot en temps réel et de sa navigation pour conaitre sa progression dans sa tâche
 ---
 ## Objectifs secondaires
 
@@ -41,7 +41,7 @@ Age : 34 ans
 
 Objectifs :
 
-- Livrer médicaments rapidement
+- Livrer le materiel manquant rapidement
 - Réduire déplacements
 
 Utilise :
@@ -60,6 +60,10 @@ Objectifs :
 - Livrer repas efficacement
 - Surveiller robot
 
+Utilise :
+
+- Interface web pour commander et surveiller robot
+
 ---
 
 # 3. Use Cases
@@ -68,7 +72,7 @@ Objectifs :
 
 |ID|Nom|Acteur|Description|
 |---|---|---|---|
-|UC-01|Livrer médicament|Infirmier|Robot livre médicament|
+|UC-01|Livrer materiel|Infirmier|Robot livre materiel|
 |UC-02|Livrer repas|Personnel|Robot livre repas|
 |UC-03|Navigation autonome|Robot|Robot se déplace seul|
 |UC-04|Éviter obstacles|Robot|Robot évite obstacles|
@@ -77,7 +81,7 @@ Objectifs :
 
 ---
 
-## UC-01 : Livrer médicament (détaillé)
+## UC-01 : Livrer materiel (détaillé)
 
 Acteur : Infirmier
 
@@ -98,7 +102,7 @@ Scénario nominal :
 
 4. Robot navigue
 
-5. Robot livre médicament
+5. Robot livre materiel
 
 6. Robot envoie confirmation
 
@@ -262,22 +266,22 @@ trash_node
 
 # 11. Roadmap
 
-|Phase|Objectif|
-|---|---|
-|Phase 1|Installation ROS2|
-|Phase 2|Navigation autonome|
-|Phase 3|Communication MQTT|
-|Phase 4|Interface|
-|Phase 5|Livraison|
-|Phase 6|Sortie poubelles|
+|Phase|Objectif|Dates|
+|---|---|---|
+|Phase 1|Installation ROS2|23/02/2026 - 08/03/2026|
+|Phase 2|Navigation autonome|09/03/2026 - 22/03/2026|
+|Phase 3|Communication MQTT|23/03/2026 - 05/04/2026|
+|Phase 4|Interface|06/04/2026 - 19/04/2026|
+|Phase 5|Livraison|20/04/2026 - 03/05/2026|
+|Phase 6|Sortie poubelles|04/05/2026 - 17/05/2026|
 
 ---
 
 # 12. Questions ouvertes
 
--  Faut-il ajouter reconnaissance QR code ?
--  Faut-il ajouter IA détection personnes ?
--  Faut-il ajouter multi-robots ?
+-  Faut-il ajouter une reconnaissance via QR code ?
+-  Faut-il ajouter l'IA détection personnes ?
+-  Faut-il créer une flotte dans l'idéal ?
 
 ---
 
@@ -285,16 +289,16 @@ trash_node
 
 Robot capable de :
 
-- recevoir commandes
+- recevoir les commandes données par le personnel soignant(infirmier,aides-soignants)
 
-- naviguer autonome
+- déplacements autonomes
 
-- éviter obstacles
+- éviter les obstacles
 
-- livrer médicaments
+- livrer le matériel
 
-- livrer repas
+- livrer les repas
 
-- communiquer temps réel
+- communiquer temps réel (suivi du robot)
 
-- sortir poubelles (optionnel)
+
