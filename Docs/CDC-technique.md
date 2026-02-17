@@ -145,7 +145,7 @@ Robot ROSMASTER M3 Pro
 
 ![Diagramme d’architecture](Images/Pasted%20image%2020260217150427.png)
 
-![Diagramme de séquence](Image/Pasted%20image%2020260217152148.png)
+![Diagramme de séquence](Images/Pasted%20image%2020260217152148.png)
 
 ---
 
