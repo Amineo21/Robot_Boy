@@ -1,352 +1,300 @@
-# Projet : Robot intelligent d'assistance pour EHPAD
+# Projet : Robot intelligent d’assistance pour EHPAD
 
-  
-# Robot : ROSMASTER M3 Pro -- ROS2 -- Jetson Nano / Orin NX
+## Robot : ROSMASTER M3 Pro — ROS2 — Jetson Nano / Orin NX
 
-  
+---
 
-------------------------------------------------------------------------
 # 1. Vision
 
-  
+ Un robot autonome basé sur ROS2 capable d’assister les infirmiers en EHPAD en livrant de manière sécurisée les médicaments et les plateaux-repas aux patients, afin d’optimiser le temps du personnel et améliorer la qualité des soins.
 
-Développer un robot autonome basé sur ROS2 capable d'assister les
-
-infirmiers en EHPAD en livrant de manière sécurisée les médicaments et
-
-les plateaux-repas aux patients, grâce à un système connecté utilisant
-
-MQTT et WebSocket pour la communication temps réel.
-
-  
-
-------------------------------------------------------------------------
+---
 
 # 2. Objectifs et périmètre
 
-## Objectifs principaux
+## Objectifs
 
-  
-1.  Permettre au robot de livrer des médicaments et des plateaux-repas
-
-2.  Permettre à l'infirmier de commander le robot via une interface
-
-3.  Permettre une communication temps réel entre interface et robot
-
-4.  Permettre au robot de naviguer de manière autonome
-
-5.  Permettre au robot d'éviter les obstacles
-
-  
-
+1. Permettre la livraison autonome de médicaments et de repas
+2. Permettre à l’infirmier de commander le robot via une interface web (tablette ou telephone mobile)
+3. Permettre une communication temps réel le suivi du robot
+4. Suivi de la position du robot en temps réel et de sa navigation
+---
 ## Objectifs secondaires
 
-  
+1. Sortie des poubelles (fonctionnalité optionnelle)
+---
 
-1.  Sortie des poubelles (fonctionnalité optionnelle)
+## Non-objectifs
 
-2.  Surveillance via caméra
+1. Remplacer le personnel soignant
+2. Transporter des charges supérieures à 5kg
+3. Utilisation en extérieur
 
-3.  Suivi en temps réel de la position
+---
 
-  
+## Personas
 
-------------------------------------------------------------------------
+### Persona 1 — Personnel soignant
 
-  
+Nom : Marie  
+Age : 34 ans
 
-# 3. Architecture globale du système
+Objectifs :
 
-  
+- Livrer médicaments rapidement
+- Réduire déplacements
 
-Infirmier → Interface → WebSocket → Serveur MQTT → MQTT → Robot
+Utilise :
 
-ROSMASTER M3 Pro
+- Interface web pour commander robot
 
-  
+---
 
-------------------------------------------------------------------------
+### Persona 2 — Personnel EHPAD
 
-  
+Nom : Paul  
+Age : 45 ans
 
-# 4. Composants Robot
+Objectifs :
 
-  
+- Livrer repas efficacement
+- Surveiller robot
 
-## Navigation
+---
 
-  
+# 3. Use Cases
 
-navigation_node\
+## Tableau des Use Cases
 
-delivery_node
+|ID|Nom|Acteur|Description|
+|---|---|---|---|
+|UC-01|Livrer médicament|Infirmier|Robot livre médicament|
+|UC-02|Livrer repas|Personnel|Robot livre repas|
+|UC-03|Navigation autonome|Robot|Robot se déplace seul|
+|UC-04|Éviter obstacles|Robot|Robot évite obstacles|
+|UC-05|Retour base|Robot|Robot retourne base|
+|UC-06|Sortie poubelle|Personnel|Robot transporte déchets|
 
-  
+---
 
-## Évitement obstacles
+## UC-01 : Livrer médicament (détaillé)
 
-  
+Acteur : Infirmier
 
-Dual ToF Lidar\
+Préconditions :
 
-Caméra RGB-D
+- Robot connecté
 
-  
+- Carte navigation chargée
 
-Nodes:
 
-  
+Scénario nominal :
 
-obstacle_avoidance_node\
+1. Infirmier sélectionne chambre
 
-safety_node
+2. Interface envoie commande
 
-  
+3. Serveur MQTT transmet commande
 
-## Vision
+4. Robot navigue
 
-  
+5. Robot livre médicament
 
-OpenCV\
+6. Robot envoie confirmation
 
-vision_node
 
-  
+Postconditions :
 
-------------------------------------------------------------------------
+- Livraison terminée
 
-# 5. Interface
 
-  
+---
 
-Technologies:
+## UC-02 : Livrer repas (détaillé)
 
-  
+Processus identique au UC-01.
 
-React\
+---
 
-WebSocket
+# 4. Architecture technique
 
-  
+Architecture globale :
 
-Fonctions:
+```
+Infirmier
+   │
+   ▼
+Interface Web
+   │ WebSocket
+   ▼
+Serveur MQTT
+   │ MQTT
+   ▼
+Robot ROSMASTER M3 Pro
+   │
+   ├── Navigation (ROS2 Nav2)
+   ├── Vision (OpenCV)
+   ├── Lidar Dual ToF
+   └── Capteurs sécurité
+```
 
-  
+---
 
--   commander robot\
+# 5. Diagrammes UML :
 
--   recevoir statut
 
-  
+![[Pasted image 20260217150427.png]]
 
-------------------------------------------------------------------------
+![[Pasted image 20260217152148.png]]
 
-  
+---
 
-# 6. Serveur MQTT
+# 6. Stack technique
 
-  
+|Composant|Technologie|Justification|
+|---|---|---|
+|Robot OS|ROS2|Standard robotique|
+|Robot compute|Jetson Nano / Orin NX|IA embarquée|
+|Langage|Python|Compatible ROS2|
+|Vision|OpenCV|Vision ordinateur|
+|Communication|MQTT|Communication robot fiable|
+|Communication|WebSocket|Communication temps réel|
+|Interface|React|Interface moderne|
+|Navigation|Nav2|Navigation autonome|
 
-Fonctions:
+---
 
-  
+## Alternatives écartées
 
--   recevoir commandes
+| Technologie | Raison                 |
+| ----------- | ---------------------- |
+| Socket.io   | trop lourd             |
+| Arduino     | puissance insuffisante |
 
--   envoyer commandes robot
+---
 
--   recevoir statut robot
+# 7. Risques et contraintes
 
--   envoyer statut interface
+## Risques
 
-  
+| Risque              | Probabilité | Impact   | Mitigation           |
+| ------------------- | ----------- | -------- | -------------------- |
+| Collision           | Moyen       | Critique | Lidar + Vision       |
+| Perte connexion     | Moyen       | Moyen    | Reconnexion MQTT     |
+| Bug ROS2            | Faible      | Moyen    | Tests                |
+| Erreur de livraison | Moyen       | Critique | Révisions régulières |
 
-Topics:
+---
 
-  
+## Contraintes
 
-robot/command\
+Hardware :
 
-robot/status\
+- ROSMASTER M3 Pro obligatoire
 
-robot/location
 
-  
+Software :
 
-------------------------------------------------------------------------
+- ROS2 obligatoire
 
-  
 
-# 7. Communication
+Environnement :
 
-  
+- Utilisation intérieure uniquement
 
-Interface → WebSocket → MQTT → Robot
 
-  
+---
 
-Robot → MQTT → WebSocket → Interface
+# 8. Sécurité
 
-  
+Mesures :
 
-------------------------------------------------------------------------
+- Détection obstacles
 
-  
+- Arrêt urgence
 
-# 8. Stack Technique
+- Surveillance capteurs
 
-  
+- Vision OpenCV
 
-Robot:
+---
 
-  
+# 9. Conventions équipe
 
-ROS2\
+Git :
 
-Python\
+Branches :
 
-Jetson Nano / Orin NX\
+```
+feature/navigation
+feature/mqtt
+feature/interface
+```
 
-Ubuntu
+Commits :
 
-  
+```
+[FEAT]:
+[FIX]:
+[DOCS]:
+```
+- Conflits : rebase sur main, resolution en binome
+- Review obligatoire avant merge
 
-Vision:
-
-  
-
-OpenCV
-
-  
-
-Communication:
-
-  
-
-MQTT\
-
-WebSocket
-
-  
-
-Interface:
-
-  
-
-React
-
-  
-
-------------------------------------------------------------------------
-
-  
-
-# 9. Use Cases
-
-  
-
-Livrer médicament\
-
-Livrer repas\
-
-Navigation autonome\
-
-Évitement obstacles\
-
-Sortie poubelles (optionnel)
-
-  
-
-------------------------------------------------------------------------
-
-  
+---
 
 # 10. Architecture ROS2
 
-  
+Nodes :
 
-Nodes:
+```
+navigation_node
+delivery_node
+vision_node
+obstacle_avoidance_node
+mqtt_node
+interface_node
+safety_node
+trash_node
+```
 
-  
+---
 
-navigation_node\
+# 11. Roadmap
 
-delivery_node\
+|Phase|Objectif|
+|---|---|
+|Phase 1|Installation ROS2|
+|Phase 2|Navigation autonome|
+|Phase 3|Communication MQTT|
+|Phase 4|Interface|
+|Phase 5|Livraison|
+|Phase 6|Sortie poubelles|
 
-vision_node\
+---
 
-obstacle_avoidance_node\
+# 12. Questions ouvertes
 
-mqtt_node\
+-  Faut-il ajouter reconnaissance QR code ?
+-  Faut-il ajouter IA détection personnes ?
+-  Faut-il ajouter multi-robots ?
 
-interface_node\
-
-safety_node\
-
-trash_node (optionnel)
-
-  
-
-------------------------------------------------------------------------
-
-  
-
-# 11. Sécurité
-
-  
-
-Détection obstacles\
-
-Arrêt urgence\
-
-Surveillance capteurs
-
-  
-
-------------------------------------------------------------------------
-
-  
-
-# 12. Roadmap
-
-  
-
-Phase 1: installation ROS2\
-
-Phase 2: navigation\
-
-Phase 3: communication MQTT\
-
-Phase 4: interface\
-
-Phase 5: livraison\
-
-Phase 6: sortie poubelles
-
-  
-
-------------------------------------------------------------------------
-
-  
+---
 
 # 13. Résultat attendu
 
-  
+Robot capable de :
 
-Robot capable de:
+- recevoir commandes
 
-  
+- naviguer autonome
 
--   recevoir commandes
+- éviter obstacles
 
--   naviguer autonome
+- livrer médicaments
 
--   éviter obstacles
+- livrer repas
 
--   livrer médicaments
+- communiquer temps réel
 
--   livrer repas
-
--   communiquer temps réel
-
--   sortir poubelles (optionnel)
+- sortir poubelles (optionnel)
