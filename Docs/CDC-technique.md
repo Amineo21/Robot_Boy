@@ -477,6 +477,7 @@ Robot retourne vers sa base de charge
 |Interface|React|Interface moderne|
 |Navigation|Nav2|Navigation autonome|
 | Application mobile   | PWA (React)| Installation tablette/mobile sans store |
+|Architecture/standardisation | Docker | Conteneurisation pour utiliser ROS2|
 
 ---
 
