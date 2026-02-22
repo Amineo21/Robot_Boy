@@ -1,15 +1,17 @@
-# Étape 1 : builder l'app React
-FROM node:20 AS builder
+# Étape 1 : builder l'app TanStack Start
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY health-robot-front/package*.json ./
-RUN npm install
+RUN npm ci
 COPY health-robot-front/ ./
 RUN npm run build
 
-# Étape 2 : serveur léger pour servir le build
-FROM node:20-slim
+# Étape 2 : runner Node.js pour TanStack Start
+FROM node:20-alpine AS runner
 WORKDIR /app
-RUN npm install -g serve
-COPY --from=builder /app/build ./build
-EXPOSE 80
-CMD ["serve", "-s", "build", "-l", "80"]
+ENV NODE_ENV=production
+COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/package*.json ./
+RUN npm ci --omit=dev
+EXPOSE 3000
+CMD ["node", ".output/server/index.mjs"]
